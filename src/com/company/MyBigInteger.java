@@ -101,6 +101,98 @@ public class MyBigInteger {
     public MyBigInteger Minus(MyBigInteger x){
         MyBigInteger result = new MyBigInteger();
 
+        if (x.Value.charAt(0) == '-'){ // subtracting a negative = addition
+            x.Value = x.Value.substring(1);
+            return this.Plus(x);
+        }
+        else if (this.Value.charAt(0) == '-') { // negative - positive = -1((-1 * negative) + positive)
+            this.Value = this.Value.substring(1);
+            result = this.Plus(x);
+            result.Value = "-" + result.ToString();
+            return result;
+        }
+
+        // only other option now is two positive numbers
+
+        // determine which is larger. this will help us determine which to subtract which from (and track if it will be negative)
+        if (x.Value.length() > this.Value.length()){
+            // if the value we are subtracting by is larger, do x - this and then add a negative to front
+            result = x.Minus(this);
+            result.Value = "-" + result.Value;
+            return result;
+        } else if (x.Value.length() == this.Value.length()){ // if same value, loop through most sig digits to find which is larger
+            // this is inefficient
+            boolean found = false;
+            int i = 0;
+            while (!found && i < this.Value.length()){
+                int thisVal = convertToInt(this.Value.charAt(i));
+                int xVal = convertToInt(x.Value.charAt(i));
+                if (xVal > thisVal){ // x is larger. same as above
+                    result = x.Minus(this);
+                    result.Value = "-" + result.Value;
+                    return result;
+                } else if (thisVal > xVal){ // this is larger, subtraction will result in positive. continue as normal
+                    found = true;
+                }
+
+                // else they are equal, look at next most significant digit
+
+                ++i;
+            }
+
+            if (!found){ // this and x are equal
+                return result;
+            }
+        }
+        // else this is larger, subtract as normal
+
+        //pad x
+        int lenDif = this.Value.length() - x.Value.length();
+        char[] pad = new char[lenDif];
+        Arrays.fill(pad, '0');
+        String fill = new String(pad);
+        x.Value = fill + x.Value;
+
+        for (int i = this.Value.length() - 1; i >= 0; --i){
+            int thisVal = convertToInt(this.Value.charAt(i));
+            int xVal = convertToInt(x.Value.charAt(i));
+            if (thisVal >= xVal){
+                int dif = thisVal - xVal;
+                char hold = convertToChar(dif);
+                String insert = String.valueOf(hold);
+                if (i == this.Value.length()-1){
+                    result.Value = insert;
+                }else {
+                    result.Value = insert + result.Value;
+                }
+            }
+            else{ // xVal > thisVal -- we need to steal from the next digit (or the next non-zero digit)
+                int s = i - 1;
+                while (convertToInt(this.Value.charAt(s)) == 0){
+                    char[] temp = this.Value.toCharArray();
+                    temp[s] = '9';
+                    this.Value = String.valueOf(temp);
+                    s--;
+                }
+                int change = convertToInt(this.Value.charAt(s)) - 1;
+                char p = convertToChar(change);
+                char[] temp = this.Value.toCharArray();
+                temp[s] = p;
+                this.Value = String.valueOf(temp);
+                thisVal = thisVal + 10;
+                int dif = thisVal - xVal;
+                char hold = convertToChar(dif);
+                String insert = String.valueOf(hold);
+                if (i == this.Value.length()-1){
+                    result.Value = insert;
+                }else {
+                    result.Value = insert + result.Value;
+                }
+            }
+        }
+
+
+
         return result;
     }
 
