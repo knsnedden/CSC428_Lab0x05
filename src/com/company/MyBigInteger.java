@@ -94,6 +94,72 @@ public class MyBigInteger {
 
     public MyBigInteger Times(MyBigInteger x){
         MyBigInteger result = new MyBigInteger();
+        boolean neg = false;
+
+        if (this.Value.charAt(0) == '-' && x.Value.charAt(0) != '-'){
+            this.Value = this.Value.substring(1);
+            neg = true;
+        } else if (this.Value.charAt(0) != '-' && x.Value.charAt(0) == '-'){
+            x.Value = x.Value.substring(1);
+            neg = true;
+        } else if (this.Value.charAt(0) == '-' && x.Value.charAt(0) == '-'){
+            this.Value = this.Value.substring(1);
+            x.Value = x.Value.substring(1);
+        }
+
+        int thisLen = this.Value.length(), xLen = x.Value.length();
+        if (thisLen > xLen){
+            int lenDif = thisLen - xLen;
+            char[] pad = new char[lenDif];
+            Arrays.fill(pad, '0');
+            String fill = new String(pad);
+
+            x.Value = fill + x.Value;
+        } else if (xLen > thisLen){
+            int lenDif = xLen - thisLen;
+            char[] pad = new char[lenDif];
+            Arrays.fill(pad, '0');
+            String fill = new String(pad);
+
+            this.Value = fill + this.Value;
+        }
+
+        int p = 0, prod, carry = 0;
+        MyBigInteger storing = new MyBigInteger();
+        for (int i = this.Value.length()-1; i >= 0; --i){
+            int thisVal = convertToInt(this.Value.charAt(i));
+            for (int j = x.Value.length()-1; j >= 0; --j){
+                int xVal = convertToInt(x.Value.charAt(j));
+                prod = thisVal * xVal + carry;
+
+                if (prod > 9){
+                    carry = prod/10;
+                    prod = prod%10;
+                } else{
+                    carry = 0;
+                }
+
+                char hold = convertToChar(prod);
+                String insert = String.valueOf(hold);
+                if (j == x.Value.length()-1){
+                    storing.Value = insert;
+                } else{
+                    storing.Value = insert + storing.ToString();
+                }
+            }
+
+            for (int k = 0; k < p; ++k){
+                storing.Value += "0";
+            }
+            result = result.Plus(storing);
+
+            storing.Value = "0";
+            p++;
+        }
+
+        if (neg){
+            result.Value = "-" + result.ToString();
+        }
 
         return result;
     }

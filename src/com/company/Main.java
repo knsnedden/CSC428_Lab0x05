@@ -7,12 +7,9 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) {
-        MyBigInteger test = new MyBigInteger("1234"), test2 = new MyBigInteger("1730");
+        MyBigInteger test = new MyBigInteger("11477"), test2 = new MyBigInteger("832");
 
-        System.out.println(test.Plus(test2).ToString());
-        test = new MyBigInteger("1234");
-        test2 = new MyBigInteger("1730");
-        System.out.println(test.Minus(test2).ToString());
+        System.out.println(test2.Times(test).ToString());
 
     }
 }
