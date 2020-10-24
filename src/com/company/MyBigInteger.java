@@ -92,6 +92,7 @@ public class MyBigInteger {
         return result;
     }
 
+    // this produces the correct results but something is causing leading zeros
     public MyBigInteger Times(MyBigInteger x){
         MyBigInteger result = new MyBigInteger();
         boolean neg = false;
@@ -126,11 +127,11 @@ public class MyBigInteger {
 
         int p = 0, prod, carry = 0;
         MyBigInteger storing = new MyBigInteger();
-        for (int i = this.Value.length()-1; i >= 0; --i){
-            int thisVal = convertToInt(this.Value.charAt(i));
-            for (int j = x.Value.length()-1; j >= 0; --j){
-                int xVal = convertToInt(x.Value.charAt(j));
-                prod = thisVal * xVal + carry;
+        for (int i = x.Value.length()-1; i >= 0; --i){
+            int xVal = convertToInt(x.Value.charAt(i));
+            for (int j = this.Value.length()-1; j >= 0; --j){
+                int thisVal = convertToInt(this.Value.charAt(j));
+                prod = xVal * thisVal + carry;
 
                 if (prod > 9){
                     carry = prod/10;
@@ -157,6 +158,11 @@ public class MyBigInteger {
             p++;
         }
 
+        // remove leading zeros
+        int i = 0;
+        while (result.Value.charAt(i) == '0' && result.Value.length() > 0){
+            result.Value = result.Value.substring(1);
+        }
         if (neg){
             result.Value = "-" + result.ToString();
         }
