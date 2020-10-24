@@ -92,7 +92,6 @@ public class MyBigInteger {
         return result;
     }
 
-    // this produces the correct results but something is causing leading zeros
     public MyBigInteger Times(MyBigInteger x){
         MyBigInteger result = new MyBigInteger();
         boolean neg = false;

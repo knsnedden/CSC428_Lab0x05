@@ -1,13 +1,107 @@
 package com.company;
 
-import java.util.Arrays;
-
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.lang.Math;
+import java.util.Random;
 
 
 public class Main {
 
     public static void main(String[] args) {
-       verification();
+       performance();
+    }
+
+    public static void performance(){
+        int N = 1, prevN = 0;
+        boolean keepGoing = true;
+        long timeBefore = 0, timeAfter = 0, pTime = 0, mTime = 0, tTime = 0, pTimePrev = 0, mTimePrev = 0, tTimePrev = 0;
+        float pDr, mDr, tDr, eDr;
+        double maxTime = Math.pow(2,30);
+        String str1 = "", str2 = "";
+
+        System.out.println("         Plus()                         Minus()                      Times()");
+        System.out.println("   N   |    Time    |  DR  | Exp. DR |    Time    |  DR  | Exp. DR |    Time    |  DR  | Exp. DR |");
+
+        while (keepGoing){
+            System.out.printf("%6d |", N);
+
+            Random ranNum = new Random();
+
+            for (int i = 0; i < N; ++i) {
+                int tmp = ranNum.nextInt(10) + 48;
+                char insert = (char) tmp;
+                str1 = str1 + String.valueOf(insert);
+                tmp = ranNum.nextInt(10) + 48;
+                insert = (char) tmp;
+                str2 = str2 + String.valueOf(insert);
+            }
+
+            MyBigInteger pfirst = new MyBigInteger(str1), psecond = new MyBigInteger(str2);
+            MyBigInteger mfirst = new MyBigInteger(str1), msecond = new MyBigInteger(str2);
+            MyBigInteger tfirst = new MyBigInteger(str1), tsecond = new MyBigInteger(str2);
+
+            if (pTime < maxTime){
+                timeBefore = getCpuTime();
+                pfirst.Plus(psecond);
+                timeAfter = getCpuTime();
+                pTime = timeAfter - timeBefore;
+                System.out.printf("%11d |", pTime);
+                if (pTimePrev == 0){
+                    System.out.printf("  na  |    na   |");
+                }else{ // linear time complexity
+                    pDr = (float)pTime/(float)pTimePrev;
+                    eDr = (float)(N/prevN);
+                    System.out.printf("%5.2f | %7.2f |", pDr, eDr);
+                }
+                pTimePrev = pTime;
+            } else{
+                System.out.printf("    --      |  --  |   --    |");
+            }
+
+            if (mTime < maxTime){
+                timeBefore = getCpuTime();
+                mfirst.Minus(msecond);
+                timeAfter = getCpuTime();
+                mTime = timeAfter - timeBefore;
+                System.out.printf("%11d |", mTime);
+                if (mTimePrev == 0){
+                    System.out.printf("  na  |    na   |");
+                }else{ // linear time complexity
+                    mDr = (float)mTime/(float)mTimePrev;
+                    eDr = (float)(N/prevN);
+                    System.out.printf("%5.2f | %7.2f |", mDr, eDr);
+                }
+                mTimePrev = mTime;
+            } else{
+                System.out.printf("    --      |  --  |   --    |");
+            }
+
+            if (tTime < maxTime){
+                timeBefore = getCpuTime();
+                tfirst.Times(tsecond);
+                timeAfter = getCpuTime();
+                tTime = timeAfter - timeBefore;
+                System.out.printf("%11d |", tTime);
+                if (tTimePrev == 0){
+                    System.out.printf("  na  |    na   |");
+                }else{ // linear time complexity
+                    tDr = (float)tTime/(float)tTimePrev;
+                    eDr = (float)(Math.pow(N,2)/Math.pow(prevN,2));
+                    System.out.printf("%5.2f | %7.2f |", tDr, eDr);
+                }
+                tTimePrev = tTime;
+            } else{
+                System.out.printf("    --      |  --  |   --    |");
+            }
+
+            System.out.println();
+            if (pTime > maxTime && mTime > maxTime && tTime > maxTime){
+                keepGoing = false;
+            }
+            prevN = N;
+            N = N*2;
+        }
     }
 
     public static void verification() {
@@ -47,5 +141,11 @@ public class Main {
         System.out.printf("Addition (of %s) with MyBigInteger: %s\n", atest2.ToString(), atest.Plus(atest2).ToString());
         System.out.printf("Subtraction (of %s) with MyBigInteger: %s\n", stest2.ToString(), stest.Minus(stest2).ToString());
         System.out.printf("Multiplication (of %s) with MyBigInteger: %s", mtest2.ToString(), mtest.Times(mtest2).ToString());
+    }
+
+    public static long getCpuTime(){
+        ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        return bean.isCurrentThreadCpuTimeSupported() ?
+                bean.getCurrentThreadCpuTime() : 0L;
     }
 }
