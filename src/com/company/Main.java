@@ -4,12 +4,25 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.lang.Math;
 import java.util.Random;
-
+import java.math.BigInteger; // using this because of time issues with MyBigInteger, as seen in performace(), to get a more accurate performance test with fib
 
 public class Main {
 
     public static void main(String[] args) {
-       performance();
+       //performance();
+
+    }
+
+    public static BigInteger fibLoopBig(int X){
+        BigInteger a = new BigInteger("0"), b = new BigInteger("1"), sum = new BigInteger("0");
+
+        for (int i = 1; i < X; ++i){
+            sum = a.add(b);
+            a = b;
+            b = sum;
+        }
+
+        return sum;
     }
 
     public static void performance(){
@@ -17,7 +30,7 @@ public class Main {
         boolean keepGoing = true;
         long timeBefore = 0, timeAfter = 0, pTime = 0, mTime = 0, tTime = 0, pTimePrev = 0, mTimePrev = 0, tTimePrev = 0;
         float pDr, mDr, tDr, eDr;
-        double maxTime = Math.pow(2,30);
+        double maxTime = Math.pow(2,33);
         String str1 = "", str2 = "";
 
         System.out.println("         Plus()                         Minus()                      Times()");

@@ -78,7 +78,11 @@ public class MyBigInteger {
             }else{
                 result.Value = insert + result.ToString();
             }
+
+            System.out.println(i);
         }
+
+
 
         if (carry == 1){  // if there is a leftover carry, add it to beginning
             char hold = convertToChar(1);
