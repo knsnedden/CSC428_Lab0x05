@@ -25,6 +25,57 @@ public class Main {
         return sum;
     }
 
+    public static BigInteger fibMatrixBig(int X){
+        BigInteger[][] arr = new BigInteger[][]{{new BigInteger("1"),new BigInteger("1")},{new BigInteger("1"),new BigInteger("0")}};
+
+
+        if (X == 0){
+            BigInteger zero = new BigInteger("0");
+            return zero;
+        }
+        matrixPower(arr,(int)X-1);
+
+        return arr[0][0];
+    }
+
+    public static void matrixPower(BigInteger[][] arr, int n){
+        if (n == 0 || n == 1){
+            return;
+        }
+
+        BigInteger[][] place = new BigInteger[][]{{new BigInteger("1"),new BigInteger("1")},{new BigInteger("1"),new BigInteger("0")}};
+
+        matrixPower(arr,n/2); // recursive: find the the smallest power and work up; n/2 because f(n+1), f(n), and f(n-1) are found
+
+        // multiply the matrix by itself
+        BigInteger a,b,c,d;
+        a = (arr[0][0].multiply(arr[0][0])).add(arr[0][1].multiply(arr[1][0]));
+        b = (arr[0][0].multiply(arr[0][1])).add(arr[0][1].multiply(arr[1][1]));
+        c = (arr[1][0].multiply(arr[0][0])).add(arr[1][1].multiply(arr[1][0]));
+        d = (arr[1][0].multiply(arr[0][1])).add(arr[1][1].multiply(arr[1][1]));
+
+        // move the results into the matrix
+        arr[0][0] = a;
+        arr[0][1] = b;
+        arr[1][0] = c;
+        arr[1][1] = d;
+
+        // if n is odd, this gives correct answer
+        if (n%2 != 0){
+            BigInteger w,x,y,z;
+            w = (arr[0][0].multiply(place[0][0])).add(arr[0][1].multiply(place[1][0]));
+            x = (arr[0][0].multiply(place[0][1])).add(arr[0][1].multiply(place[1][1]));
+            y = (arr[1][0].multiply(place[0][0])).add(arr[1][1].multiply(place[1][0]));
+            z = (arr[1][0].multiply(place[0][1])).add(arr[1][1].multiply(place[1][1]));
+
+            arr[0][0] = w;
+            arr[0][1] = x;
+            arr[1][0] = y;
+            arr[1][1] = z;
+        }
+
+
+    }
     public static void performance(){
         int N = 1, prevN = 0;
         boolean keepGoing = true;
