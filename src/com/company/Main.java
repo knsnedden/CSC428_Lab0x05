@@ -5,12 +5,12 @@ import java.lang.management.ThreadMXBean;
 import java.lang.Math;
 import java.util.Random;
 import java.math.BigInteger; // using this because of time issues with MyBigInteger, as seen in performace(), to get a more accurate performance test with fib
+import java.math.BigDecimal;
 
 public class Main {
 
     public static void main(String[] args) {
        //performance();
-
 
     }
 
@@ -87,6 +87,16 @@ public class Main {
         result = ((Math.pow(a,X))-Math.pow(b,X))/Math.sqrt(5);
 
         return result;
+    }
+
+    public static BigDecimal fibFormulaBig(int X){
+        BigDecimal result = new BigDecimal("0"), a = new BigDecimal((1+Math.sqrt(5))/2), b = new BigDecimal((1-Math.sqrt(5))/2), sq = new BigDecimal(Math.sqrt(5));
+
+        result = (a.pow(X).subtract(b.pow(X))).divide(sq);
+
+        return result;
+
+
     }
 
     public static void performance(){
