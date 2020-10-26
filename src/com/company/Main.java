@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) {
        //performance();
 
+
     }
 
     public static BigInteger fibLoopBig(int X){
@@ -76,6 +77,18 @@ public class Main {
 
 
     }
+
+    public static double fibFormula(int X){
+        double result = 0, a, b;
+
+        a = (1+Math.sqrt(5))/2;
+        b = (1-Math.sqrt(5))/2;
+
+        result = ((Math.pow(a,X))-Math.pow(b,X))/Math.sqrt(5);
+
+        return result;
+    }
+
     public static void performance(){
         int N = 1, prevN = 0;
         boolean keepGoing = true;
