@@ -3,6 +3,7 @@ package com.company;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.lang.Math;
+import java.math.MathContext;
 import java.util.Random;
 import java.math.BigInteger; // using this because of time issues with MyBigInteger, as seen in performace(), to get a more accurate performance test with fib
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
        //performance();
-
+        fibVerification();
     }
 
     public static BigInteger fibLoopBig(int X){
@@ -78,18 +79,7 @@ public class Main {
 
     }
 
-    public static double fibFormula(int X){
-        double result = 0, a, b;
-
-        a = (1+Math.sqrt(5))/2;
-        b = (1-Math.sqrt(5))/2;
-
-        result = ((Math.pow(a,X))-Math.pow(b,X))/Math.sqrt(5);
-
-        return result;
-    }
-
-    public static BigDecimal fibFormulaBig(int X){
+    public static BigDecimal fibConstant(int X){
         BigDecimal result = new BigDecimal("0"), a = new BigDecimal((1+Math.sqrt(5))/2), b = new BigDecimal((1-Math.sqrt(5))/2), sq = new BigDecimal(Math.sqrt(5));
 
         result = (a.pow(X).subtract(b.pow(X))).divide(sq);
@@ -228,6 +218,15 @@ public class Main {
         System.out.printf("Addition (of %s) with MyBigInteger: %s\n", atest2.ToString(), atest.Plus(atest2).ToString());
         System.out.printf("Subtraction (of %s) with MyBigInteger: %s\n", stest2.ToString(), stest.Minus(stest2).ToString());
         System.out.printf("Multiplication (of %s) with MyBigInteger: %s", mtest2.ToString(), mtest.Times(mtest2).ToString());
+    }
+
+    public static void fibVerification(){
+        MathContext m = new MathContext(2);
+        System.out.println("fibLoopBig() | fibMatrixBig() | fibConstant() |");
+        for (int i = 0; i < 20; ++i){
+            String str1 = fibLoopBig(i).toString(), str2 = fibMatrixBig(i).toString(), str3 = fibConstant(i).round(m).toString();
+            System.out.printf("%12s | %14s | %13s |\n", str1, str2, str3);
+        }
     }
 
     public static long getCpuTime(){
