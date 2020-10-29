@@ -13,8 +13,16 @@ public class MyBigInteger {
         Value = x;
     }
 
-    public String ToString(){
+    public String Value(){
         return Value;
+    }
+
+    public String AbbreviatedValue(){
+        String begin = Value.substring(0,5);
+        String mid = "...";
+        String end = Value.substring(Value.length()-5);
+
+        return begin+mid+end;
     }
 
     public MyBigInteger Plus(MyBigInteger x){
@@ -76,7 +84,7 @@ public class MyBigInteger {
             if (i == this.Value.length()-1){
                 result.Value = insert; // first instance needs to replace the "0" in result
             }else{
-                result.Value = insert + result.ToString();
+                result.Value = insert + result.Value();
             }
 
             System.out.println(i);
@@ -87,10 +95,10 @@ public class MyBigInteger {
         if (carry == 1){  // if there is a leftover carry, add it to beginning
             char hold = convertToChar(1);
             String insert = String.valueOf(hold);
-            result.Value = insert + result.ToString();
+            result.Value = insert + result.Value();
         }
         if (neg){ // if both negative, add the negative back in
-            result.Value = "-" + result.ToString();
+            result.Value = "-" + result.Value();
         }
 
         return result;
@@ -148,7 +156,7 @@ public class MyBigInteger {
                 if (j == x.Value.length()-1){
                     storing.Value = insert;
                 } else{
-                    storing.Value = insert + storing.ToString();
+                    storing.Value = insert + storing.Value();
                 }
             }
 
@@ -163,11 +171,11 @@ public class MyBigInteger {
 
         // remove leading zeros
         int i = 0;
-        while (result.Value.charAt(i) == '0' && result.Value.length() > 0){
+        while (result.Value.charAt(i) == '0' && result.Value.length() > 1){
             result.Value = result.Value.substring(1);
         }
         if (neg){
-            result.Value = "-" + result.ToString();
+            result.Value = "-" + result.Value();
         }
 
         return result;
@@ -183,7 +191,7 @@ public class MyBigInteger {
         else if (this.Value.charAt(0) == '-') { // negative - positive = -1((-1 * negative) + positive)
             this.Value = this.Value.substring(1);
             result = this.Plus(x);
-            result.Value = "-" + result.ToString();
+            result.Value = "-" + result.Value();
             return result;
         }
 
